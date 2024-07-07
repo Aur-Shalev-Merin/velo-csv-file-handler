@@ -12,11 +12,9 @@ $w.onReady(function () {
     $w('#button1').onClick(() => {
         //remember to remove the ocnsole.log after testing
         console.log("Button clicked.");
-
-        $w('#box67').show();
-
+        
         // Call the backend function to fetch and process the CSV data
-        fetchAndProcessCSV(wixUsers.currentUser.id, startUTC, endUTC) 
+        fetchAndProcessCSV(wixUsers.currentUser.id) 
             .then(base64Data => {
                 const fileName = 'filtered_data.csv'; // Name of the CSV file to download
                 const mimeType = 'text/csv'; // MIME type for CSV
@@ -43,9 +41,5 @@ $w.onReady(function () {
                 $w('#text43').text = 'Error fetching or processing CSV: ' + error.message; // Display error message
                 $w('#text43').show();
             })
-            .finally(() => {
-                // Hide the loading icon after the process is complete
-                $w('#box67').hide();
-            });
     });
 });
