@@ -2,12 +2,18 @@ import axios from 'axios';
 import zlib from 'zlib';
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import {getCallLogsCsvLink} from 'backend/apiCaller.jsw'
+import {getCallLogsCsvLink} from 'backend/apiCaller.jsw' 
+//input your own backend here; this class is used for dealing with APIs that return a URL pointing to a gzipped CSV file, should be quite simple to change it to suit your needs;
+
+
 
 export async function fetchAndProcessCSV(userId, startUTC, endUTC) {
     try {
+        //remember to comment out the console.log after you are done with testing
         console.log("Fetching CSV URL from the API...");
-        const url = await getCallLogsCsvLink(userId, startUTC, endUTC);
+
+        //however you implement this is up to you, ut should return a URL pointed to a gzipped csv file...
+        const url = await getCsvLink(userId, startUTC, endUTC);
 
         // Fetch the compressed file
         const response = await axios({
@@ -42,7 +48,9 @@ export async function fetchAndProcessCSV(userId, startUTC, endUTC) {
 
 function processCSV(csvData) {
     return new Promise((resolve, reject) => {
-        const desiredColumns = ['start_time', 'end_time', 'destination', 'duration'];
+
+        //add the columns you want to keep
+        const desiredColumns = ['start_time', 'end_time', 'ect....'];
         const results = [];
         const parser = parse({
             columns: true,
