@@ -29,3 +29,36 @@ By providing a clear example of how to handle CSV files in Wix Velo, I hope to m
 4. **Backend Code**
 
    Create a file named csvHandler.jsw in the Backend section of your Wix Editor and add the code in the repository.
+
+## Summary
+
+1. Frontend Interaction:
+-The user interacts with the frontend by clicking a button (downloadButton) to initiate the CSV download process.
+-The frontend uses Wix Velo's API to call a backend function (fetchAndProcessCSV).
+
+2. Backend Processing:
+
+-The backend function fetchAndProcessCSV is responsible for fetching, decompressing, processing, and converting the CSV data.
+-It fetches a gzipped CSV file from a specified URL using axios.
+-The fetched gzipped data is decompressed using zlib.
+-The decompressed CSV data is parsed and filtered to retain specific columns using csv-parse.
+-The filtered data is then converted back to a CSV format using csv-stringify.
+-The processed CSV data is converted to a base64 string.
+
+3. Returning Processed Data:
+
+-The base64 encoded CSV data is returned to the frontend.
+
+4. Download Link Creation:
+
+-The frontend receives the base64 encoded CSV data.
+-It dynamically creates an HTML content with a download link for the CSV file.
+-This HTML content is set into an HTML iframe (htmlElement) on the page.
+-The download link is automatically clicked to trigger the CSV file download.
+
+## Overall Flow
+-User clicks the button.
+-Frontend calls the backend function.
+-Backend fetches, processes, and converts the CSV data to base64.
+-Backend returns the base64 data to the frontend.
+-Frontend creates a download link and triggers the download.
