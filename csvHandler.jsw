@@ -1,55 +1,59 @@
+// Import necessary modules for handling HTTP requests, data compression, and CSV parsing/stringifying
 import axios from 'axios';
 import zlib from 'zlib';
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import {getCallLogsCsvLink} from 'backend/apiCaller.jsw' 
-//input your own backend here; this class is used for dealing with APIs that return a URL pointing to a gzipped CSV file, should be quite simple to change it to suit your needs;
 
-
-
+// This function fetches and processes a gzipped CSV file from a URL returned by an API
 export async function fetchAndProcessCSV(userId, startUTC, endUTC) {
     try {
-        //remember to comment out the console.log after you are done with testing
+        // Log the fetching process for debugging (comment out in production)
         console.log("Fetching CSV URL from the API...");
 
-        //however you implement this is up to you, ut should return a URL pointed to a gzipped csv file...
-        const url = await getCsvLink(userId, startUTC, endUTC);
+        // Replace 'your_URL' with the actual URL pointing to the gzipped CSV file
+        const url = "your_URL";
 
-        // Fetch the compressed file
+        // Fetch the compressed CSV file from the specified URL
         const response = await axios({
             url,
             method: 'GET',
             responseType: 'arraybuffer'
         });
 
+        // Log the successful fetch for debugging (comment out in production)
         console.log("Fetched file successfully, decompressing...");
-        
-      // Decompress the gzip file
+
+        // Decompress the gzip file
         const buffer = Buffer.from(response.data);
         const decompressedBuffer = zlib.gunzipSync(buffer);
         const csvData = decompressedBuffer.toString('utf8');
+
+        // Log the successful decompression for debugging (comment out in production)
         console.log("Decompressed file successfully, processing CSV data...");
 
-        // Process the CSV data to filter the columns
+        // Process the CSV data to filter specific columns
         const filteredCSV = await processCSV(csvData);
 
+        // Log the successful processing for debugging (comment out in production)
         console.log("CSV data processed successfully.");
-        
-        // Convert CSV data to base64
+
+        // Convert the filtered CSV data to base64
         const base64Data = Buffer.from(filteredCSV).toString('base64');
-        
+
         // Return the base64 encoded CSV data
         return base64Data;
     } catch (error) {
+        // Log any errors that occur during the fetch or processing
         console.error('Error fetching or processing CSV:', error);
         throw error;
     }
 }
 
+// This function processes the CSV data to keep only the desired columns
 function processCSV(csvData) {
     return new Promise((resolve, reject) => {
 
-        //add the columns you want to keep
+        // Define the columns you want to keep in the filtered CSV
         const desiredColumns = ['start_time', 'end_time', 'ect....'];
         const results = [];
         const parser = parse({
@@ -57,6 +61,7 @@ function processCSV(csvData) {
             trim: true
         });
 
+        // Read and process each record from the CSV data
         parser.on('readable', () => {
             let record;
             while ((record = parser.read())) {
@@ -68,11 +73,13 @@ function processCSV(csvData) {
             }
         });
 
+        // Handle any errors that occur during CSV parsing
         parser.on('error', err => {
             console.error("Error parsing CSV data:", err);
             reject(err);
         });
 
+        // When parsing is complete, stringify the filtered results
         parser.on('end', () => {
             console.log("Finished parsing CSV data.");
             stringify(results, { header: true }, (err, output) => {
@@ -86,6 +93,7 @@ function processCSV(csvData) {
             });
         });
 
+        // Start parsing the CSV data
         console.log("Starting to parse CSV data...");
         parser.write(csvData);
         parser.end();
