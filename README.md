@@ -16,13 +16,11 @@ It is
    
    git clone https://github.com/Aur-Shalev-Merin/velo-csv-file-handler.git
 
-2. 
-   Open the project in Wix Editor and set up a page with the following elements:
+2. **Open the project in Wix Editor and set up a page with the following elements:**
 
    -A button with the ID 'downloadButton'
    -An HTML iframe with the ID 'htmlElement'
 
    Add the DownloadCSVPage code to the page.
 
-4.
-  Create a file named csvHandler.jsw in the Backend section of your Wix Editor and add the code in the repository
+3. **Create a file named csvHandler.jsw in the Backend section of your Wix Editor and add the code in the repository**
